@@ -3,8 +3,7 @@ var canvas,		//Canvas object.
 	canvasWidth,
 	canvasHeight,
 	name = "Vanessa",
-	nameWidth = 500,
-	circles = false;
+	nameWidth = 500;
 
 var draw = function(){
 	"use strict";
@@ -28,8 +27,6 @@ var draw = function(){
 	}
 
 	ctx.save();
-
-	circles = false;
 };
 
 var randColor = function(){
@@ -56,21 +53,38 @@ var randColor = function(){
 		ctx.fillText(name.charAt(i), x, canvasHeight / 2);
 		x += (ctx.measureText(name.charAt(i+1)).width);
 	}
-
-	circles = false;
 };
 
 var lightSwitch = function(s){
 	"use strict";
 
+	var nameLength = name.length,
+		x = (canvasWidth / 2) - (nameWidth / 2);
+
 	$("#canvas").toggleClass("light");
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
 	ctx.save();
 
-	ctx.globalCompositeOperation = "destination-over";
+	if($("#canvas").hasClass("light")){
+		//Create the text.
 
-	if(circles === false){
-		ctx.fillStyle = "#FFF";
+		ctx.fillStyle = "#fdff00";
+		ctx.strokeStyle = "rgba(254, 255, 120, 0.5)";
+		ctx.lineWidth = "5";
+
+		for(var i = 0; i < nameLength; i++){
+			ctx.fillText(name.charAt(i), x, canvasHeight / 2);
+			ctx.strokeText(name.charAt(i), x, canvasHeight / 2);
+			x += ctx.measureText(name.charAt(i)).width;
+		}
+
+		//Create background circles.
+
+		ctx.globalCompositeOperation = "destination-over";
+
+		ctx.fillStyle = "rgb(254, 255, 195)";
 		ctx.globalAlpha = 0.2;  //Set alpha value for all shapes declared from this point onwards.
 
 		//Draw the translucent circles.
@@ -78,15 +92,15 @@ var lightSwitch = function(s){
 			ctx.save();
 			ctx.beginPath();
 			ctx.translate(canvasWidth / 2, canvasHeight / 2);
-			ctx.scale(2, 1);
+			ctx.scale(2, 0.85);
 			ctx.arc(0, 0, 10 + 30 * i, 0, Math.PI * 2, true);
 			ctx.fill();
 			ctx.restore();
 		}
 
 		ctx.restore();
-
-		circles = true;
+	} else{
+		draw();
 	}
 };
 
