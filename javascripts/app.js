@@ -28,8 +28,29 @@ var light = {
 	}
 };
 
+var border = function(){
+	ctx.save();
+
+	//Draw border around the canvas.
+	ctx.lineWidth = 5;
+	ctx.strokeStyle = "black";
+	ctx.beginPath();
+	ctx.moveTo(0, 0);
+	ctx.lineTo(canvasWidth, 0);
+	ctx.lineTo(canvasWidth, canvasHeight);
+	ctx.lineTo(0, canvasHeight);
+	ctx.lineTo(0, 0);
+	ctx.stroke();
+
+	ctx.restore();
+};
+
 var draw = function(){
 	"use strict";
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+	border();
 
 	var nameLength = name.length,
 		x = (canvasWidth / 2) - (nameWidth / 2);
@@ -42,18 +63,18 @@ var draw = function(){
 	ctx.font = "10em monospace";
 	ctx.fillStyle = "#000";
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
 	for(var i = 0; i < nameLength; i++){
 		ctx.fillText(name.charAt(i), x, canvasHeight / 2);
 		x += ctx.measureText(name.charAt(i)).width;
 	}
-
-	ctx.save();
 };
 
 var randColor = function(){
 	"use strict";
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+	border();
 
 	var nameLength = name.length,
 		x = (canvasWidth / 2) - (nameWidth / 2);
@@ -61,9 +82,6 @@ var randColor = function(){
 	if($("#canvas").hasClass("light")){
 		$("#canvas").toggleClass("light");
 	};
-
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
 
 	for(var i = 0; i < nameLength; i++){
 		var r, g, b;
@@ -81,6 +99,8 @@ var randColor = function(){
 var lightSwitch = function(s){
 	"use strict";
 
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
 	var nameLength = name.length,
 		x = (canvasWidth / 2) - (nameWidth / 2);
 
@@ -90,16 +110,14 @@ var lightSwitch = function(s){
 
 	$("#canvas").toggleClass("light");
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
 	ctx.save();
 
 	if($("#canvas").hasClass("light")){
 		//Create the text.
 
 		ctx.fillStyle = "#fdff00";
-		ctx.strokeStyle = "rgba(254, 255, 120, 0.5)";
-		ctx.lineWidth = "5";
+		ctx.strokeStyle = "rgba(255, 255, 84, 0.5)";
+		ctx.lineWidth = "7";
 
 		for(var i = 0; i < nameLength; i++){
 			ctx.fillText(name.charAt(i), x, canvasHeight / 2);
@@ -107,23 +125,18 @@ var lightSwitch = function(s){
 			x += ctx.measureText(name.charAt(i)).width;
 		}
 
-		//Create background circles.
+		//Create background glow.
 
 		ctx.globalCompositeOperation = "destination-over";
 
-		ctx.fillStyle = "rgb(254, 255, 195)";
-		ctx.globalAlpha = 0.2;  //Set alpha value for all shapes declared from this point onwards.
+		ctx.scale(2, .75);
+		var glowGrad = ctx.createRadialGradient(canvasWidth / 4, canvasHeight / 2, 0, canvasWidth / 4, canvasHeight / 2, 175);
 
-		//Draw the translucent circles.
-		for(var i = 0; i < 6; i++){
-			ctx.save();
-			ctx.beginPath();
-			ctx.translate(canvasWidth / 2, canvasHeight / 2);
-			ctx.scale(2, 0.85);
-			ctx.arc(0, 0, 10 + 30 * i, 0, Math.PI * 2, true);
-			ctx.fill();
-			ctx.restore();
-		}
+		glowGrad.addColorStop(0, "#FFFFC3");
+		glowGrad.addColorStop(1, "rgba(255, 255, 195, 0.0");
+
+		ctx.fillStyle = glowGrad;
+		ctx.fillRect(0, 0, 750, 600);
 
 		ctx.restore();
 	} else{
@@ -134,6 +147,8 @@ var lightSwitch = function(s){
 var flashlight = function(){
 	"use strict";
 
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	
 	var nameLength = name.length,
 		x = (canvasWidth / 2) - (nameWidth / 2);
 
@@ -142,8 +157,6 @@ var flashlight = function(){
 	};
 
 	$("#canvas").toggleClass("light");
-
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
 	ctx.save();
 
@@ -210,6 +223,8 @@ var main = function(){
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 			    light.x = e.clientX;
 			    light.y = e.clientY;
+			    console.log("X: " + e.clientX);
+			    console.log("Y: " + e.clientY);
 			    flashlight();
 			    light.draw();
 			}

@@ -11,3 +11,7 @@
 #canvas.light{
 	background-color: black;
 }
+
+#canvas.flashLight:hover{
+	cursor: none;
+}
