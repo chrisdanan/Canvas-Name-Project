@@ -4,11 +4,15 @@ var canvas,		//Canvas object.
 	canvasHeight,
 	name = "Vanessa",
 	nameWidth = 500,
+	nameLength = name.length,
+	canvasCenterX,
+	canvasCenterY,
 	lightOn = false;
 
+
 var light = {
-	x: (canvasWidth / 2),
-	y: (canvasHeight / 2),
+	x: canvasCenterX,
+	y: canvasCenterY,
 	draw: function(){
 		ctx.globalCompositeOperation = "destination-over";
 
@@ -25,6 +29,19 @@ var light = {
 		}
 
 		ctx.globalAlpha = 1;
+	}
+};
+
+var initializeCanvas = function(){
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	border();
+
+	if($("#canvas").hasClass("light")){
+		$("#canvas").toggleClass("light");
+	};
+
+	if($("#canvas").hasClass("flashLight")){
+		$("#canvas").toggleClass("flashLight");
 	}
 };
 
@@ -48,16 +65,9 @@ var border = function(){
 var draw = function(){
 	"use strict";
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	var x = (canvasWidth / 2) - (nameWidth / 2);
 
-	border();
-
-	var nameLength = name.length,
-		x = (canvasWidth / 2) - (nameWidth / 2);
-
-	if($("#canvas").hasClass("light")){
-		$("#canvas").toggleClass("light");
-	};
+	initializeCanvas();
 
 	ctx.textAlign = "center";
 	ctx.font = "10em monospace";
@@ -72,16 +82,9 @@ var draw = function(){
 var randColor = function(){
 	"use strict";
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	var x = (canvasWidth / 2) - (nameWidth / 2);
 
-	border();
-
-	var nameLength = name.length,
-		x = (canvasWidth / 2) - (nameWidth / 2);
-
-	if($("#canvas").hasClass("light")){
-		$("#canvas").toggleClass("light");
-	};
+	initializeCanvas();
 
 	for(var i = 0; i < nameLength; i++){
 		var r, g, b;
@@ -99,14 +102,9 @@ var randColor = function(){
 var lightSwitch = function(s){
 	"use strict";
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	var x = (canvasWidth / 2) - (nameWidth / 2);
 
-	var nameLength = name.length,
-		x = (canvasWidth / 2) - (nameWidth / 2);
-
-	if($("#canvas").hasClass("light")){
-		$("#canvas").toggleClass("light");
-	};
+	initializeCanvas();
 
 	$("#canvas").toggleClass("light");
 
@@ -147,17 +145,13 @@ var lightSwitch = function(s){
 var flashlight = function(){
 	"use strict";
 
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	
-	var nameLength = name.length,
-		x = (canvasWidth / 2) - (nameWidth / 2);
+	var x = (canvasWidth / 2) - (nameWidth / 2);
 
-	if($("#canvas").hasClass("light")){
-		$("#canvas").toggleClass("light");
-	};
+	initializeCanvas();
 
 	$("#canvas").toggleClass("light");
-
+	$("#canvas").addClass("flashLight");
+	
 	ctx.save();
 
 	if($("#canvas").hasClass("light")){
@@ -184,6 +178,8 @@ var main = function(){
 	canvas = document.getElementById("canvas");
 	canvasWidth = canvas.width;
 	canvasHeight = canvas.height;
+	canvasCenterX = canvasWidth / 2;
+	canvasCenterY = canvasHeight / 2;
 
 	if(canvas.getContext){
 		ctx = canvas.getContext("2d");
