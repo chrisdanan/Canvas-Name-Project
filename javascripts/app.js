@@ -25,7 +25,9 @@ var canvas,							//Canvas object.
 	lightOn = false,				//Determines if flashlight is on in order to track mouse movement on canvas.
 	rafHover,						//Request animation frame id for hover animation.
 	rafShip,						//Request animation frame id for ship animation.
-	rotateDegrees = 0.2;			//Number of degrees ship rotates per frame.
+	rotateDegrees = 0.2,			//Number of degrees ship rotates per frame.
+	rafEgg,							//Request animation frame id for Easter egg animation.
+	imgX = 0;						//Easter egg x-position.
 
 
 //Flashlight object.
@@ -226,6 +228,30 @@ var wave2 = {
 		ctx.restore();
 	}
 };
+
+var eggName = {
+	x: 750 / 2,			//Name initialized to center of canvas.
+	y: 300 / 2,			
+	vx: 5,				//Velocity in x-direction.
+	vy: 1,				//Velocity in y-direction.
+	rotate: 0.3,		//Rotation.
+	draw: function(){	//Draw text to canvas.
+		ctx.save();
+
+		ctx.textAlign = "center";
+		ctx.font = "10em impact";
+		ctx.fillStyle = "#1639e7";
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = "7";
+		ctx.fillText("Daryn", this.x, this.y);
+		ctx.strokeText("Daryn", this.x, this.y);
+
+		ctx.restore();
+	}
+};
+
+var eggImage = new Image();
+eggImage.src = "db.png";
 
 /*************
  * Purpose: Draw a border around the canvas.
@@ -524,6 +550,37 @@ var ship = function(){
 	rafShip = window.requestAnimationFrame(ship);
 };
 
+var egg = function(){
+	"use strict";
+
+	initializeCanvas();
+
+	ctx.save();
+
+	ctx.save();
+	ctx.translate(canvasCenterX, canvasCenterY);
+	ctx.rotate(Math.PI / 180 * eggName.rotate);
+	ctx.translate(-canvasCenterX, -canvasCenterY);
+	eggName.draw();
+
+	eggName.rotate += 3;
+
+	ctx.restore();
+
+	ctx.globalCompositeOperation = "destination-over";
+	ctx.drawImage(eggImage, imgX, 0);
+
+	imgX += 5;
+
+	if(imgX > canvasWidth){
+		imgX = 0 - eggImage.width;
+	}
+
+	ctx.restore();
+
+	rafEgg = window.requestAnimationFrame(egg);
+};
+
 var main = function(){
 	"use strict";
 
@@ -611,6 +668,21 @@ var main = function(){
 
 			if(!rafShip){
 				window.requestAnimationFrame(ship);
+			}
+		});
+
+		//Easter Egg effect.
+		$("#Easteregg").on("click", function(){
+			console.log("You found an Easter egg!");
+
+			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafShip);
+			rafHover = "";
+			rafShip = "";
+			lightOn = false;
+
+			if(!rafEgg){
+				window.requestAnimationFrame(egg);
 			}
 		});
 
