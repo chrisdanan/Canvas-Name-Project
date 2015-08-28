@@ -9,13 +9,15 @@ var canvas,		//Canvas object.
 	canvasCenterY,
 	lightOn = false,
 	rafHover,
-	rafShadow;
+	rafShip,
+	rotateDegrees = 0.2;
 
 
 var light = {
 	x: 750 / 2,  //Undefined if using canvas.width.
 	y: 300 + 50,
 	draw: function(){
+		ctx.save();
 		ctx.globalCompositeOperation = "destination-over";
 
 		ctx.fillStyle = "rgb(255, 255, 255)";
@@ -31,6 +33,7 @@ var light = {
 		}
 
 		ctx.globalAlpha = 1;
+		ctx.restore();
 	}
 };
 
@@ -40,6 +43,7 @@ var hoverName = {
 	vx: 5,
 	vy: 1,
 	acc: 0.8,
+	rotate: 15,
 	draw: function(){
 		ctx.save();
 		ctx.textAlign = "center";
@@ -48,7 +52,7 @@ var hoverName = {
 		ctx.fillText("Vanessa", this.x, this.y);
 		ctx.restore();
 	}
-}
+};
 
 var hoverShadow = {
 	x: 750 / 2,
@@ -64,7 +68,75 @@ var hoverShadow = {
 		ctx.fillText("Vanessa", this.x, this.y);
 		ctx.restore();
 	}
-}
+};
+
+var shipName = {
+	x: 750 / 2,
+	y: 300 / 2,
+	vx: 5,
+	vy: 1,
+	acc: 0.8,
+	rotate: 15,
+	draw: function(){
+		ctx.save();
+		ctx.textAlign = "center";
+		ctx.font = "10em monospace";
+		ctx.fillStyle = "#000";
+		ctx.fillText("Vanessa", this.x, this.y);
+		ctx.restore();
+	}
+};
+
+var wave1 = {
+	x: 0,
+	y: 250,
+	vx: 2,
+	vy: 2,
+	color: "#398cff",
+	draw: function(){
+		ctx.save();
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = "5";
+		ctx.beginPath();
+		ctx.scale(1.1, 1);
+		ctx.moveTo(this.x, this.y);
+		ctx.bezierCurveTo(250, 100, 500, 400, 750, 250);
+		ctx.lineTo(750, 500);
+		ctx.lineTo(0, 500);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+		ctx.stroke();
+		ctx.restore();
+	}
+};
+
+var wave2 = {
+	x: 750,
+	y: 250,
+	vx: 2,
+	vy: 1,
+	color: "#145ec3",
+	draw: function(){
+		ctx.save();
+		ctx.fillStyle = this.color;
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = "5";
+		ctx.beginPath();
+		ctx.scale(1.1, 1);
+		ctx.moveTo(this.x, this.y);
+		ctx.bezierCurveTo(500, 100, 250, 500, 0, 250);
+		ctx.lineTo(0, 500);
+		ctx.lineTo(750, 500);
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+		ctx.stroke();
+		ctx.restore();
+	}
+};
+
 var initializeCanvas = function(){
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	border();
@@ -201,11 +273,11 @@ var flashlight = function(){
 
 		light.draw();
 	}
+
+	ctx.restore();
 };
 
 var hover = function(){
-
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
 	initializeCanvas();
 
@@ -229,6 +301,58 @@ var hover = function(){
 	rafHover = window.requestAnimationFrame(hover);
 };
 
+var ship = function(){
+
+	initializeCanvas();
+
+	ctx.save();
+
+	//Name.
+	shipName.y = 230;
+	ctx.translate(250, 200);
+	ctx.rotate(Math.PI / 180 * shipName.rotate);
+	ctx.translate(-250, -200);
+	shipName.draw();
+
+	ctx.restore();
+
+	ctx.save();
+
+	//Waves.
+	wave1.draw();
+	ctx.globalCompositeOperation = "destination-over";
+	wave2.draw();
+
+	//Background.
+	ctx.fillStyle = "#9ffdff";
+	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+	ctx.restore();
+
+	shipName.rotate += rotateDegrees;
+
+	wave1.x += wave1.vx;
+	wave1.y += wave1.vy;
+	wave2.y += wave2.vy;
+
+	if(wave1.x > 400 || wave1.x < 250){
+		wave1.vx = -wave1.vx;
+	}
+	if(wave1.y > 300 || wave1.y < 150){
+		wave1.vy = -wave1.vy;
+	}
+
+	if(wave2.y > 300 || wave2.y < 200){
+		wave2.vy = -wave2.vy;
+	}
+
+	if(shipName.rotate < 10 || shipName.rotate > 20){
+		rotateDegrees = -rotateDegrees;
+	}
+
+	rafShip = window.requestAnimationFrame(ship);
+};
+
 var main = function(){
 	"use strict";
 
@@ -249,6 +373,7 @@ var main = function(){
 			console.log("Default button clicked.");
 
 			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafShip);
 			lightOn = false;
 			draw();
 		});
@@ -257,6 +382,7 @@ var main = function(){
 			console.log("Random Color Button clicked.");
 
 			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafShip);
 			lightOn = false;
 			randColor();
 		});
@@ -265,6 +391,7 @@ var main = function(){
 			console.log("Light Switch clicked.");
 
 			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafShip);
 			lightOn = false;
 			lightSwitch();
 		});
@@ -273,6 +400,7 @@ var main = function(){
 			console.log("Flash Light button clicked.");
 
 			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafShip);
 			lightOn = true;
 			flashlight();
 		});
@@ -281,7 +409,15 @@ var main = function(){
 			console.log("Hover Button clicked.");
 
 			lightOn = false;
+			window.cancelAnimationFrame(rafShip);
 			window.requestAnimationFrame(hover);
+		});
+
+		$("#ship").on("click", function(){
+			console.log("Ship Button clicked.");
+
+			window.cancelAnimationFrame(rafHover);
+			window.requestAnimationFrame(ship);
 		});
 
 		canvas.addEventListener('mousemove', function(e){
