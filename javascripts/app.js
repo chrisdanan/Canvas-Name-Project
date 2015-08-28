@@ -27,7 +27,8 @@ var canvas,							//Canvas object.
 	rafShip,						//Request animation frame id for ship animation.
 	rotateDegrees = 0.2,			//Number of degrees ship rotates per frame.
 	rafEgg,							//Request animation frame id for Easter egg animation.
-	imgX = 0;						//Easter egg x-position.
+	imgX = 0,						//Easter egg x-position.
+	clickCount = 0;					//Number of times default button is clicked to activate Easter egg.
 
 
 //Flashlight object.
@@ -592,6 +593,8 @@ var main = function(){
 	canvasCenterX = canvasWidth / 2;
 	canvasCenterY = canvasHeight / 2;
 
+	$("#Easteregg").hide();
+
 	//Only do canvas stuff if browser supports it.
 	if(canvas.getContext){
 		ctx = canvas.getContext("2d");
@@ -602,10 +605,18 @@ var main = function(){
 		$("#defaultBtn").on("click", function(){
 			console.log("Default button clicked.");
 
+			clickCount += 1;
+			
+			if(clickCount >= 5){
+				$("#Easteregg").show();
+			}
+
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			window.cancelAnimationFrame(rafEgg);
 			rafHover = "";
 			rafShip = "";
+			rafEgg = "";
 			lightOn = false;
 			draw();
 		});
@@ -614,10 +625,14 @@ var main = function(){
 		$("#randColorBtn").on("click", function(){
 			console.log("Random Color Button clicked.");
 
+			clickCount = 0;
+
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			window.cancelAnimationFrame(rafEgg);
 			rafHover = "";
 			rafShip = "";
+			rafEgg = "";
 			lightOn = false;
 			randColor();
 		});
@@ -626,10 +641,14 @@ var main = function(){
 		$("#lightSwitch").on("click", function(){
 			console.log("Light Switch clicked.");
 
+			clickCount = 0;
+
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			window.cancelAnimationFrame(rafEgg);
 			rafHover = "";
 			rafShip = "";
+			rafEgg = "";
 			lightOn = false;
 			lightSwitch();
 		});
@@ -638,10 +657,14 @@ var main = function(){
 		$("#flashLight").on("click", function(){
 			console.log("Flash Light button clicked.");
 
+			clickCount = 0;
+
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			window.cancelAnimationFrame(rafEgg);
 			rafHover = "";
 			rafShip = "";
+			rafEgg = "";
 			lightOn = true;
 			flashlight();
 		});
@@ -650,9 +673,13 @@ var main = function(){
 		$("#hover").on("click", function(){
 			console.log("Hover Button clicked.");
 
+			clickCount = 0;
+
 			lightOn = false;
 			window.cancelAnimationFrame(rafShip);
+			window.cancelAnimationFrame(rafEgg);
 			rafShip = "";
+			rafEgg = "";
 
 			if(!rafHover){
 				window.requestAnimationFrame(hover);
@@ -663,8 +690,12 @@ var main = function(){
 		$("#ship").on("click", function(){
 			console.log("Ship Button clicked.");
 
+			clickCount = 0;
+
 			window.cancelAnimationFrame(rafHover);
+			window.cancelAnimationFrame(rafEgg);
 			rafHover = "";
+			rafEgg = "";
 
 			if(!rafShip){
 				window.requestAnimationFrame(ship);
@@ -674,6 +705,8 @@ var main = function(){
 		//Easter Egg effect.
 		$("#Easteregg").on("click", function(){
 			console.log("You found an Easter egg!");
+
+			clickCount = 0;
 
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
