@@ -1,5 +1,36 @@
-#canvas-area{
+/*** General Styling ***/
+/***************************************/
 
+body{
+	margin: 0;
+	padding: 0;
+	font-family: verdana, sans-serif;
+	font-size: 100%;
+	color: #000;
+	background-color: #FFF;
+}
+
+a{
+	text-decoration: none;
+	color: #00d8d8;
+}
+
+#header, #content{
+	margin: 5%;
+}
+
+/*** Header Styling ***/
+/***************************************/
+
+#header{
+	margin-bottom: 0;
+}
+
+/*** Content Styling ***/
+/***************************************/
+
+.toHide{
+	display: none;
 }
 
 #canvas{
@@ -14,4 +45,35 @@
 
 #canvas.flashLight:hover{
 	cursor: none;
+}
+
+#eggFinder{
+	font-weight: bold;
+	color: #00d8d8;
+}
+
+#hint{
+	color: red;
+}
+
+#eggFinder:hover, button:hover{
+	cursor: pointer;
+}
+
+#controls{
+	width: 90%;
+}
+
+button{
+	width: 30%;
+	margin: 1%;
+	background-color: #00b8ff;
+	border: none;
+	font-size: 120%;
+}
+
+@media(min-width: 900px){
+	#info-area, #controls{
+		max-width: 750px;
+	}
 }

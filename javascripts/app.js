@@ -594,6 +594,7 @@ var main = function(){
 	canvasCenterY = canvasHeight / 2;
 
 	$("#Easteregg").hide();
+	$("#hint").hide();
 
 	//Only do canvas stuff if browser supports it.
 	if(canvas.getContext){
@@ -606,9 +607,10 @@ var main = function(){
 			console.log("Default button clicked.");
 
 			clickCount += 1;
-			
+
 			if(clickCount >= 5){
 				$("#Easteregg").show();
+
 			}
 
 			window.cancelAnimationFrame(rafHover);
@@ -717,6 +719,11 @@ var main = function(){
 			if(!rafEgg){
 				window.requestAnimationFrame(egg);
 			}
+		});
+
+		//Show the hint for the Easter egg.
+		$("#eggFinder").on("click", function(){
+			$("#hint").show();
 		});
 
 		//Track movement of mouse for flashlight.
