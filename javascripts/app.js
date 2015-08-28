@@ -79,10 +79,73 @@ var shipName = {
 	rotate: 15,
 	draw: function(){
 		ctx.save();
+
+		//Draw ship.
+		ctx.strokeStyle = "black";
+		ctx.fillStyle = "#ab6800";
+		ctx.lineWidth = "5";
+
+		//Sail support.
+		ctx.beginPath();
+		ctx.moveTo(380, 130);
+		ctx.lineTo(380, -33);
+		ctx.lineTo(400, -33);
+		ctx.lineTo(400, 130);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.fill();
+
+		//Ship body.
+		ctx.beginPath();
+		ctx.moveTo(80, 130);
+		ctx.lineTo(700, 130);
+		ctx.quadraticCurveTo(700, 200, 650, 300);
+		ctx.lineTo(200, 300);
+		ctx.quadraticCurveTo(80, 300, 80, 140);
+		ctx.lineTo(60, 140);
+		ctx.lineTo(60, 130);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.fill();
+
+		//Sail.
+		ctx.beginPath();
+		ctx.moveTo(400, -10);
+		ctx.quadraticCurveTo(550, -20, 550, 100);
+		ctx.lineTo(400, 100);
+		ctx.lineTo(415, 100);
+		ctx.lineTo(415, -10);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.save();
+		//Sail icon.
+		var path = new Path2D();
+		ctx.fillStyle = "rgb(0, 200, 200)";
+		ctx.translate(420, 0);
+		ctx.scale(0.50, 0.50);
+		path.moveTo(75, 40);
+		path.bezierCurveTo(75, 37, 70, 25, 50, 25);
+		path.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+		path.bezierCurveTo(20, 80, 40, 102, 75, 120);
+		ctx.fill(path);
+		ctx.fillStyle = "rgb(255, 133, 0)";
+		path = new Path2D();
+		path.moveTo(75, 120);
+		path.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+		path.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+		path.bezierCurveTo(85, 25, 75, 37, 75, 40);
+		ctx.fill(path);
+
+		ctx.restore();
+
+		//Draw text.
 		ctx.textAlign = "center";
-		ctx.font = "10em monospace";
+		ctx.font = "7em cursive";
 		ctx.fillStyle = "#000";
 		ctx.fillText("Vanessa", this.x, this.y);
+
 		ctx.restore();
 	}
 };
@@ -430,7 +493,7 @@ var main = function(){
 
 			window.cancelAnimationFrame(rafHover);
 			rafHover = "";
-			
+
 			if(!rafShip){
 				window.requestAnimationFrame(ship);
 			}
