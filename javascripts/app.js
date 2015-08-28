@@ -7,12 +7,14 @@ var canvas,		//Canvas object.
 	nameLength = name.length,
 	canvasCenterX,
 	canvasCenterY,
-	lightOn = false;
+	lightOn = false,
+	rafHover,
+	rafShadow;
 
 
 var light = {
-	x: canvasCenterX,
-	y: canvasCenterY,
+	x: 750 / 2,  //Undefined if using canvas.width.
+	y: 300 + 50,
 	draw: function(){
 		ctx.globalCompositeOperation = "destination-over";
 
@@ -32,6 +34,37 @@ var light = {
 	}
 };
 
+var hoverName = {
+	x: 750 / 2,
+	y: 300 / 2,
+	vx: 5,
+	vy: 1,
+	acc: 0.8,
+	draw: function(){
+		ctx.save();
+		ctx.textAlign = "center";
+		ctx.font = "10em monospace";
+		ctx.fillStyle = "#000";
+		ctx.fillText("Vanessa", this.x, this.y);
+		ctx.restore();
+	}
+}
+
+var hoverShadow = {
+	x: 750 / 2,
+	y: 3000,
+	xScale: 1,
+	xScaleStretch: -0.001,
+	yScale: 0.08,
+	yScaleStretch: -0.0002,
+	draw: function(){
+		ctx.save();
+		ctx.scale(this.xScale, this.yScale);
+		ctx.fillStyle = "#ababab";
+		ctx.fillText("Vanessa", this.x, this.y);
+		ctx.restore();
+	}
+}
 var initializeCanvas = function(){
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	border();
@@ -151,7 +184,7 @@ var flashlight = function(){
 
 	$("#canvas").toggleClass("light");
 	$("#canvas").addClass("flashLight");
-	
+
 	ctx.save();
 
 	if($("#canvas").hasClass("light")){
@@ -168,6 +201,32 @@ var flashlight = function(){
 
 		light.draw();
 	}
+};
+
+var hover = function(){
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+	initializeCanvas();
+
+	hoverName.draw();
+	ctx.save();
+	ctx.globalCompositeOperation = "destination-over";
+	hoverShadow.draw();
+	ctx.restore();
+
+	hoverName.y += hoverName.vy * hoverName.acc;
+
+	//hoverShadow.xScale += hoverShadow.xScaleStretch;
+	//hoverShadow.yScale -= hoverShadow.yScaleStretch;
+
+	if(hoverName.y > 200 || hoverName.y < 150){
+		hoverName.vy = -hoverName.vy;
+		//hoverShadow.xScaleStretch = -hoverShadow.xScaleStretch;
+		//hoverShadow.yScaleStretch = -hoverShadow.yScaleStretch;
+	}
+
+	rafHover = window.requestAnimationFrame(hover);
 };
 
 var main = function(){
@@ -189,6 +248,7 @@ var main = function(){
 		$("#defaultBtn").on("click", function(){
 			console.log("Default button clicked.");
 
+			window.cancelAnimationFrame(rafHover);
 			lightOn = false;
 			draw();
 		});
@@ -196,6 +256,7 @@ var main = function(){
 		$("#randColorBtn").on("click", function(){
 			console.log("Random Color Button clicked.");
 
+			window.cancelAnimationFrame(rafHover);
 			lightOn = false;
 			randColor();
 		});
@@ -203,6 +264,7 @@ var main = function(){
 		$("#lightSwitch").on("click", function(){
 			console.log("Light Switch clicked.");
 
+			window.cancelAnimationFrame(rafHover);
 			lightOn = false;
 			lightSwitch();
 		});
@@ -210,8 +272,16 @@ var main = function(){
 		$("#flashLight").on("click", function(){
 			console.log("Flash Light button clicked.");
 
+			window.cancelAnimationFrame(rafHover);
 			lightOn = true;
 			flashlight();
+		});
+
+		$("#hover").on("click", function(){
+			console.log("Hover Button clicked.");
+
+			lightOn = false;
+			window.requestAnimationFrame(hover);
 		});
 
 		canvas.addEventListener('mousemove', function(e){
@@ -219,13 +289,16 @@ var main = function(){
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 			    light.x = e.clientX;
 			    light.y = e.clientY;
-			    console.log("X: " + e.clientX);
-			    console.log("Y: " + e.clientY);
+			    //console.log("X: " + e.clientX);
+			    //console.log("Y: " + e.clientY);
 			    flashlight();
 			    light.draw();
 			}
-});
+		});
 	}
 };
 
 $(document).ready(main);
+
+//t
+//fflvd
