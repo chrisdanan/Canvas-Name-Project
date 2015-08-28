@@ -374,6 +374,8 @@ var main = function(){
 
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			rafHover = "";
+			rafShip = "";
 			lightOn = false;
 			draw();
 		});
@@ -383,6 +385,8 @@ var main = function(){
 
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			rafHover = "";
+			rafShip = "";
 			lightOn = false;
 			randColor();
 		});
@@ -392,6 +396,8 @@ var main = function(){
 
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			rafHover = "";
+			rafShip = "";
 			lightOn = false;
 			lightSwitch();
 		});
@@ -401,6 +407,8 @@ var main = function(){
 
 			window.cancelAnimationFrame(rafHover);
 			window.cancelAnimationFrame(rafShip);
+			rafHover = "";
+			rafShip = "";
 			lightOn = true;
 			flashlight();
 		});
@@ -410,14 +418,22 @@ var main = function(){
 
 			lightOn = false;
 			window.cancelAnimationFrame(rafShip);
-			window.requestAnimationFrame(hover);
+			rafShip = "";
+
+			if(!rafHover){
+				window.requestAnimationFrame(hover);
+			}
 		});
 
 		$("#ship").on("click", function(){
 			console.log("Ship Button clicked.");
 
 			window.cancelAnimationFrame(rafHover);
-			window.requestAnimationFrame(ship);
+			rafHover = "";
+			
+			if(!rafShip){
+				window.requestAnimationFrame(ship);
+			}
 		});
 
 		canvas.addEventListener('mousemove', function(e){
