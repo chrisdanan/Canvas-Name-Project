@@ -9,20 +9,23 @@
  					-https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
  *************/
 
+// Client-side code
+/* jshint browser: true, jquery: true, curly: true, eqeqeq: true, forin: true, immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: double, strict: true, undef: true, unused: true */
+
 //Global variables.
-var canvas,						//Canvas object.
-	ctx,						//Context of canvas = 2d.
-	canvasWidth,				//Width of canvas.
-	canvasHeight,				//Height of canvas.
-	name = "Vanessa",			//Name that is written on canvas.
-	nameWidth = 500,			//Width of 'Vanessa' hard coded to be 500 and used for centering text on canvas.
-	nameLength = name.length,	//Number of characters in name.
-	canvasCenterX,				//Center of width for the canvas.
-	canvasCenterY,				//Center of height for the canvas.
-	lightOn = false,			//Determines if flashlight is on in order to track mouse movement on canvas.
-	rafHover,					//Request animation frame id for hover animation.
-	rafShip,					//Request animation frame id for ship animation.
-	rotateDegrees = 0.2;		//Number of degrees ship rotates per frame.
+var canvas,							//Canvas object.
+	ctx,							//Context of canvas = 2d.
+	canvasWidth,					//Width of canvas.
+	canvasHeight,					//Height of canvas.
+	nameText = "Vanessa",			//Name that is written on canvas.
+	nameWidth = 500,				//Width of 'Vanessa' hard coded to be 500 and used for centering text on canvas.
+	nameLength = nameText.length,	//Number of characters in name.
+	canvasCenterX,					//Center of width for the canvas.
+	canvasCenterY,					//Center of height for the canvas.
+	lightOn = false,				//Determines if flashlight is on in order to track mouse movement on canvas.
+	rafHover,						//Request animation frame id for hover animation.
+	rafShip,						//Request animation frame id for ship animation.
+	rotateDegrees = 0.2;			//Number of degrees ship rotates per frame.
 
 
 //Flashlight object.
@@ -224,31 +227,6 @@ var wave2 = {
 	}
 };
 
-/**************
- * Purpose: Initialize canvas state for each effect.
- * Input: 	
- 			-None.
- * Output: 	
- 			-Clear canvas of previous drawings.
- 			-Draw border on canvas.
- 			-Remove any previous classes appended to canvas object.
-*************/
-var initializeCanvas = function(){
-	"use strict";
-
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-	border();
-
-	if($("#canvas").hasClass("light")){
-		$("#canvas").toggleClass("light");
-	};
-
-	if($("#canvas").hasClass("flashLight")){
-		$("#canvas").toggleClass("flashLight");
-	}
-};
-
 /*************
  * Purpose: Draw a border around the canvas.
  * Input: 	
@@ -274,6 +252,31 @@ var border = function(){
 	ctx.restore();
 };
 
+/**************
+ * Purpose: Initialize canvas state for each effect.
+ * Input: 	
+ 			-None.
+ * Output: 	
+ 			-Clear canvas of previous drawings.
+ 			-Draw border on canvas.
+ 			-Remove any previous classes appended to canvas object.
+*************/
+var initializeCanvas = function(){
+	"use strict";
+
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+	border();
+
+	if($("#canvas").hasClass("light")){
+		$("#canvas").toggleClass("light");
+	}
+
+	if($("#canvas").hasClass("flashLight")){
+		$("#canvas").toggleClass("flashLight");
+	}
+};
+
 /*************
  * Purpose: Default effect - draw name to canvas.	
  * Input: 	
@@ -297,8 +300,8 @@ var draw = function(){
 	// where this method draws the text, creating a sudden, jarring effect of the text moving when switching back and forth between effects.
 	// So, in order to make the effects transition smoothly, I just did this method.
 	for(var i = 0; i < nameLength; i++){
-		ctx.fillText(name.charAt(i), x, canvasHeight / 2);
-		x += ctx.measureText(name.charAt(i)).width;
+		ctx.fillText(nameText.charAt(i), x, canvasHeight / 2);
+		x += ctx.measureText(nameText.charAt(i)).width;
 	}
 };
 
@@ -325,8 +328,8 @@ var randColor = function(){
 		b = Math.floor(Math.random() * 256);
 
 		ctx.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-		ctx.fillText(name.charAt(i), x, canvasHeight / 2);
-		x += (ctx.measureText(name.charAt(i+1)).width);
+		ctx.fillText(nameText.charAt(i), x, canvasHeight / 2);
+		x += (ctx.measureText(nameText.charAt(i+1)).width);
 	}
 };
 
@@ -337,7 +340,7 @@ var randColor = function(){
  * Output:
  			-Name is written in yellow and radial gradient is used to make glow effect.
 *************/
-var lightSwitch = function(s){
+var lightSwitch = function(){
 	"use strict";
 
 	var x = (canvasWidth / 2) - (nameWidth / 2);
@@ -357,15 +360,15 @@ var lightSwitch = function(s){
 		//Draw text.
 
 		for(var i = 0; i < nameLength; i++){
-			ctx.fillText(name.charAt(i), x, canvasHeight / 2);
-			ctx.strokeText(name.charAt(i), x, canvasHeight / 2);
-			x += ctx.measureText(name.charAt(i)).width;
+			ctx.fillText(nameText.charAt(i), x, canvasHeight / 2);
+			ctx.strokeText(nameText.charAt(i), x, canvasHeight / 2);
+			x += ctx.measureText(nameText.charAt(i)).width;
 		}
 
 		//Create background glow.
 
 		ctx.globalCompositeOperation = "destination-over";
-		ctx.scale(2, .75);
+		ctx.scale(2, 0.75);
 		var glowGrad = ctx.createRadialGradient(canvasWidth / 4, canvasHeight / 2, 0, canvasWidth / 4, canvasHeight / 2, 175);
 		glowGrad.addColorStop(0, "#FFFFC3");
 		glowGrad.addColorStop(1, "rgba(255, 255, 195, 0.0");
@@ -403,8 +406,8 @@ var flashlight = function(){
 		ctx.fillStyle = "#000";
 
 		for(var i = 0; i < nameLength; i++){
-			ctx.fillText(name.charAt(i), x, canvasHeight / 2);
-			x += ctx.measureText(name.charAt(i)).width;
+			ctx.fillText(nameText.charAt(i), x, canvasHeight / 2);
+			x += ctx.measureText(nameText.charAt(i)).width;
 		}
 
 		//Initialize light.
@@ -423,6 +426,7 @@ var flashlight = function(){
 			-Name hovers and a shadow is drawn beneath it. Animation is started and rafHover is given raf id.
 *************/
 var hover = function(){
+	"use strict";
 
 	initializeCanvas();
 
@@ -464,6 +468,7 @@ var hover = function(){
  			-Name, ship, and waves are drawn and animation is started. rafShip is given raf id.
 *************/
 var ship = function(){
+	"use strict";
 
 	initializeCanvas();
 
@@ -610,7 +615,7 @@ var main = function(){
 		});
 
 		//Track movement of mouse for flashlight.
-		canvas.addEventListener('mousemove', function(e){
+		canvas.addEventListener("mousemove", function(e){
 			if(lightOn){
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 			    light.x = e.clientX;
