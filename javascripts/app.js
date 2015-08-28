@@ -728,10 +728,14 @@ var main = function(){
 
 		//Track movement of mouse for flashlight.
 		canvas.addEventListener("mousemove", function(e){
+
+			//Reference: http://stackoverflow.com/questions/17130395/canvas-html5-real-mouse-position
+			var rect = canvas.getBoundingClientRect();
+
 			if(lightOn){
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-			    light.x = e.clientX;
-			    light.y = e.clientY;
+			    light.x = e.clientX - rect.left;
+			    light.y = e.clientY - rect.top;
 			    //console.log("X: " + e.clientX);
 			    //console.log("Y: " + e.clientY);
 			    flashlight();

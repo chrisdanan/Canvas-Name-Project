@@ -34,7 +34,7 @@ a{
 }
 
 #canvas{
-	max-width: 100%;
+	/*max-width: 100%;*/
 	font-family: verdana, sans-serif;
 	background-color: white;
 }
